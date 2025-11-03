@@ -37,7 +37,7 @@ export const AuthContext = createContext({} as AuthContextData)
 export function AuthProvider(props: AuthProvider) {
   const [user, setUser] = useState<User | null>(null)
 
-  const signInUrl = `https://github.com/login/oauth/authorize?scope=user&client_id=c573879f9d3bdd4f445b`
+  const signInUrl = `https://github.com/login/oauth/authorize?scope=user&client_id=${import.meta.env.VITE_GITHUB_CLIENT_ID}`
   async function signIn(githubCode: string) {
     const response = await api.post<AuthResponse>('authenticate', {
       code: githubCode,
@@ -46,7 +46,7 @@ export function AuthProvider(props: AuthProvider) {
     console.log(response.data)
     const { token, user } = response.data;
 
-    localStorage.setItem('@dowhile:token', token)
+    localStorage.setItem('@message:token', token)
 
     api.defaults.headers.common.authorization = `Bearer ${token}`
 
@@ -56,12 +56,12 @@ export function AuthProvider(props: AuthProvider) {
 
   function signOut() {
     setUser(null);
-    localStorage.removeItem('@dowhile:token')
+    localStorage.removeItem('@message:token')
   }
 
   //Info do usuario logado
   useEffect(() => {
-    const token = localStorage.getItem('@dowhile:token')
+    const token = localStorage.getItem('@message:token')
     if (token) {
 
       //Mandar tokem pelo header da req

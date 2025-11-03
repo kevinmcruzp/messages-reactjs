@@ -4,13 +4,6 @@ import { LoginBox } from './components/LoginBox';
 import { Message, MessageList } from './components/MessageList';
 import { SendMessageForm } from './components/SendMessageForm';
 import { AuthContext } from './contexts/auth';
-import { io } from 'socket.io-client';
-
-
-// const socket = io('https://dowhile-messages-nodejs-kevinmcruzp.vercel.app')
-//   socket.on('new_message', (newMessage: Message) => {
-//     messagesQueue.push(newMessage)
-// })
 
 export function App() {
   const { user } = useContext(AuthContext);
