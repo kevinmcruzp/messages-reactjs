@@ -1,8 +1,6 @@
-import io from 'socket.io-client'
 import { api } from '../../service/api'
 import styles from './styles.module.scss'
 
-import logoImg from '../../assets/logo.svg'
 import { useEffect, useState } from 'react'
 
 export type Message = {
@@ -30,7 +28,11 @@ export function MessageList({ messages, setMessages }: MessageListProps) {
 
   return (
     <div className={styles.messageListWrapper}>
-      <img src={logoImg} alt="DoWhile2021" />
+      <div className={styles.messageListHeader}>
+        <p className={styles.messageListTitle}>
+          <span>💬</span> Mensagens da comunidade
+        </p>
+      </div>
 
       <ul className={styles.messageList}>
         {
