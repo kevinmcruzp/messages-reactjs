@@ -1,7 +1,4 @@
-import { api } from '../../service/api'
 import styles from './styles.module.scss'
-
-import { useEffect, useState } from 'react'
 
 export type Message = {
   id: string;
@@ -14,18 +11,9 @@ export type Message = {
 
 type MessageListProps = {
   messages: Message[];
-  setMessages: (messages: any) => void;
 }
 
-export function MessageList({ messages, setMessages }: MessageListProps) {
-  // const [messages, setMessages] = useState<Message[]>([])
-
-  useEffect(() => {
-    api.get<Message[]>('messages/last3').then(response => {
-      setMessages(response.data)
-    })
-  }, [])
-
+export function MessageList({ messages }: MessageListProps) {
   return (
     <div className={styles.messageListWrapper}>
       <div className={styles.messageListHeader}>

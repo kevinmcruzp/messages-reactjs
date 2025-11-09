@@ -11,38 +11,47 @@ export function App() {
   const [messages, setMessages] = useState<Message[]>([])
   const [currentMessage, setCurrentMessage] = useState<string>('');
 
-    useEffect(() => {
-      
-      if (user && currentMessage !== '') {
-        const messagesQueue: Message[] = [];
+  useEffect(() => {
+    if (user && currentMessage !== '') {
+      const newMessage: Message = {
+        id: user.id,
+        text: currentMessage,
+        user: {
+          name: user.name,
+          avatar_url: user.avatar_url
+        }
+      };
 
-        messagesQueue.push({
-          id: user!!.id,
-          text: currentMessage,
-          user: {
-            name: user!!.name,
-            avatar_url: user!!.avatar_url
-          }
-        });
-  
-        const timer = setInterval(() => {
-          if (messagesQueue.length > 0) {
-            setMessages((prevState: any) => [
-              messagesQueue[0],
-              prevState[0],
-              prevState[1],
-            ].filter(Boolean));
-    
-            messagesQueue.shift();
-          }
-        }, 2000)
+      setMessages((prevState) => [
+        newMessage,
+        ...prevState.slice(0, 2)
+      ]);
+    }
+  }, [currentMessage, user])
+
+  useEffect(() => {
+    if (!user) return;
+
+    const fetchMessages = async () => {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/messages/last3`);
+        const data = await response.json();
+        setMessages(data);
+      } catch (error) {
+        console.error('Erro ao buscar mensagens:', error);
       }
+    };
 
-    },[currentMessage])
+    fetchMessages();
+
+    const interval = setInterval(fetchMessages, 5000);
+
+    return () => clearInterval(interval);
+  }, [user])
 
   return (
     <main className={`${styles.contentWrapper} ${!!user ? styles.contentSigned : ''}`}>
-      <MessageList messages={messages} setMessages={setMessages} />
+      <MessageList messages={messages} />
       {!!user ? <SendMessageForm setCurrentMessage={setCurrentMessage} /> : <LoginBox />}
 
     </main>
